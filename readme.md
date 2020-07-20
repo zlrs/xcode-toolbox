@@ -48,7 +48,6 @@ kill $(ps aux | grep 'Xcode' | awk '{print $2}')
 2. `find` subcommand
 
 To find all XCode project/workspace file(s) under the given directory. (search the directory tree recursively)
-
 # Contribution
 Any kind of contributions are welcome. If you have any requirements or you encounter any bugs, feel free to open an issue or create a PR.
 
