@@ -38,7 +38,7 @@ chmod +x ./xc
 mv ./xc /usr/local/bin/
 ```
 
-# Further fetures
+# Further features
 1. `kill` subcommand
 
 To kill all running XCode processes, equivalent to the following shell command. 
