@@ -66,7 +66,7 @@ def getXCodeProjectOrWorkspaceFilePath(dirPath) -> str:
 def openInXcode(dirPath):
     file_path = getXCodeProjectOrWorkspaceFilePath(dirPath)
     if file_path:
-        cmd = 'open %s' % file_path
+        cmd = 'open "%s"' % file_path
         print(cmd)
         os.system(cmd)
     else:
