@@ -69,11 +69,15 @@ def xc(path=''):
     For example, use it to quickly open a workspace after `pod install`. 
     """
     if path == '':
-        cwd = os.getcwd()
+        path = os.getcwd()
+    
+    abs_path = os.path.abspath(path)
+    
+    if os.path.exists(abs_path):
+        openInXcode(abs_path)
     else:
-        cwd = path
-    abs_cwd = os.path.abspath(cwd)
-    openInXcode(abs_cwd)
+        click.echo('path not exist.')
+        exit(1)
 
 
 if __name__ == '__main__':
