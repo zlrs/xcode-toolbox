@@ -1,19 +1,7 @@
 #!/usr/bin/python3
 import sys
 import os
-
-
-def help_message():
-    return """Xcode Opener
-    A CLI tool that opens XCode project from Terminal. 
-    Auto detect `.xcodeproj` file or `.xcworkspace` file. 
-    For example, use it to quickly open a workspace after `pod install`. 
-
-Usage:
-    xc [<XCode_project_directory>]
-
-Options:
-    -h, --help                  Show this help"""
+import click
 
 
 def getXCodeProjectOrWorkspaceFilePath(dirPath) -> str:
@@ -21,7 +9,7 @@ def getXCodeProjectOrWorkspaceFilePath(dirPath) -> str:
         basename1 = os.path.basename(file1)
         basename2 = os.path.basename(file2)
         return os.path.splitext(basename1)[0] == os.path.splitext(basename2)[0]
-    
+
     def chooseFromPrompt(workspaceFile: [str], projectFile: [str]) -> str:
         files = workspaceFile + projectFile
         prompt = ''
@@ -73,17 +61,24 @@ def openInXcode(dirPath):
         print('No .xcodeproj / .xcworkspace file is found. ')
 
 
-def main():
-    if(len(sys.argv) <= 1 or sys.argv[1] == '.'):
-        cwd = os.getcwd()
-    elif(sys.argv[1] in ['-h', '--help']):
-        print(help_message())
-        return
+@click.command()
+@click.argument('path', default='.')
+def xc(path=''):
+    """A CLI tool that opens XCode project from Terminal. 
+    Auto detect `.xcodeproj` file or `.xcworkspace` file. 
+    For example, use it to quickly open a workspace after `pod install`. 
+    """
+    if path == '':
+        path = os.getcwd()
+    
+    abs_path = os.path.abspath(path)
+    
+    if os.path.exists(abs_path):
+        openInXcode(abs_path)
     else:
-        cwd = sys.argv[1]
-    abs_cwd = os.path.abspath(cwd)
-    openInXcode(abs_cwd)
+        click.echo('path not exist.')
+        exit(1)
 
 
-if(__name__ == '__main__'):
-    main()
+if __name__ == '__main__':
+    xc()
