@@ -28,14 +28,8 @@ xc
 Python 2.7+ or Python 3.5+
 
 # Installation
-An installation script is provided. 
 ```shell
-bash ./install.sh
-```
-The only thing the installation script does is to copy the `xc` python file to `/usr/local/bin`. It's totoally OK if you'd like to do it manually. 
-```shell
-chmod +x ./xc
-mv ./xc /usr/local/bin/
+curl https://raw.githubusercontent.com/zlrs/xcode-opener/master/install.sh | zsh
 ```
 
 # Further features
@@ -46,8 +40,11 @@ To kill all running XCode processes, equivalent to the following shell command.
 kill $(ps aux | grep 'Xcode' | awk '{print $2}')
 ```
 2. `find` subcommand
+* find a source file
+* find all XCode project/workspace file(s) under the given directory. (search the directory tree recursively)
+3. clear XCode project index folder
+4. clear XCode project derivedData folder
 
-To find all XCode project/workspace file(s) under the given directory. (search the directory tree recursively)
 # Contribution
 Any kind of contributions are welcome. If you have any requirements or you encounter any bugs, feel free to open an issue or create a PR.
 

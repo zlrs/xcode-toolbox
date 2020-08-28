@@ -2,7 +2,7 @@ import requests
 import os
 import json
 
-VERSION = '0.9.0'
+VERSION = '1.1.0'
 
 
 class Version:
