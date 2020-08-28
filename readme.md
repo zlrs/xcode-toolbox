@@ -29,7 +29,7 @@ Python 2.7+ or Python 3.5+
 
 # Installation
 ```shell
-curl https://raw.githubusercontent.com/zlrs/xcode-opener/master/install.sh | zsh
+curl https://raw.githubusercontent.com/zlrs/xcode-opener/master/install.sh | sudo zsh
 ```
 
 # Further features
