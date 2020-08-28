@@ -2,6 +2,7 @@
 import sys
 import os
 import click
+import version_check
 
 
 def getXCodeProjectOrWorkspaceFilePath(dirPath) -> str:
@@ -73,11 +74,15 @@ def xc(path=''):
     
     abs_path = os.path.abspath(path)
     
+    exit_ret = 0
     if os.path.exists(abs_path):
         openInXcode(abs_path)
     else:
         click.echo('path not exist.')
-        exit(1)
+        exit_ret = 1
+    
+    version_check.run()
+    exit(exit_ret)
 
 
 if __name__ == '__main__':

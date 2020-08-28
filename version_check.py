@@ -1,7 +1,8 @@
 import requests
+import os
+import json
 
-
-VERSION = '1.0.0'
+VERSION = '0.9.0'
 
 
 class Version:
@@ -41,11 +42,43 @@ def version_check():
         current = Version(VERSION)
         latest = Version(latestVersionStr)
         if latest > current:
-            print('You are using xc %s. The latest version is %s. Please consider update. ' % (current.version, latest.version))
+            print('You are using xc %s. The latest version is %s. Please consider upgrade. ' % (current.version, latest.version))
+            print('https://github.com/zlrs/xcode-opener/releases')
+
+
+def shouldCheckVersion():
+    def initVersionCheck(file_path):
+        data = {
+            "version_check_count": 1
+        }
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f)
+
+    folder = os.path.join(os.path.expanduser('~'), '.xc')
+    if not os.path.exists(folder):
+        os.mkdir(folder)
+    
+    file_path = os.path.join(folder, 'version_check.json')
+    if not os.path.exists(file_path):
+        initVersionCheck(file_path)
+    else:
+        try:
+            with open(file_path, 'r+', encoding='utf-8') as f:
+                data = json.load(f)
+                data["version_check_count"] += 1
+                f.seek(0)
+                json.dump(data, f)
+        except:
+            initVersionCheck(file_path)
+    
+    if data["version_check_count"] % 10 == 0:
+        return True
+    return False
 
 
 def run():
-    version_check()
+    if shouldCheckVersion():
+        version_check()
 
 
 if __name__ == '__main__':
