@@ -3,8 +3,8 @@ import os
 import json
 from logger import printInfo, printExecute, printError
 
-
 VERSION = '1.2.1'
+VERSION_CHECK_TIMES = 7
 
 # ANSI colors
 RED = '\033[0;31m'
@@ -58,13 +58,14 @@ def checkVersion():
             res = input(Info + 'Would you like to upgrade now? [y/N]' + NC)
             if res == 'y':
                 install_script = os.path.join(os.path.dirname(__file__), 'install.sh')
+                install_script = os.path.expanduser(install_script)
                 printExecute(install_script)
                 os.execv(install_script, (install_script,))
 
 
 def shouldCheckVersion():
     """
-    Check version every several times(default to 10) the program is called.
+    Check version every several times(VERSION_CHECK_TIMES) the program is called.
     :return:Boolean value, whether should program check version.
     """
     def initVersionCheck(file_path):
@@ -91,7 +92,7 @@ def shouldCheckVersion():
         except:
             initVersionCheck(file_path)
     
-    if data["version_check_count"] % 10 == 0:
+    if data["version_check_count"] % VERSION_CHECK_TIMES == 0:
         return True
     return False
 
