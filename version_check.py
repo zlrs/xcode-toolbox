@@ -5,15 +5,15 @@ import json
 VERSION = '1.2.0'
 
 
-class Version:
+class YQVersion:
     def __init__(self, version: str):
         version.strip()
         version.strip("vV")
         self.version = version
-        self.sematic_versions = version.split('.')
+        self.semantic_versions = version.split('.')
         self.digitVersions = []
-        for sematic_ver in self.sematic_versions:
-            self.digitVersions.append(int(sematic_ver))
+        for semantic_ver in self.semantic_versions:
+            self.digitVersions.append(int(semantic_ver))
     
     def __eq__(self, other):
         return tuple(self.digitVersions) == tuple(other.digitVersions)
@@ -22,7 +22,7 @@ class Version:
         return tuple(self.digitVersions) < tuple(other.digitVersions)
 
 
-def get_latest_version():
+def getLatestVersion():
     URL = 'https://api.github.com/repos/zlrs/xcode-opener/releases?accept=application/vnd.github.v3+json'
     res = requests.get(URL)
     if not res.ok:
@@ -36,17 +36,21 @@ def get_latest_version():
         return '', "error"
 
 
-def version_check():
-    latestVersionStr, err = get_latest_version()
+def checkVersion():
+    latest_version_str, err = getLatestVersion()
     if not err:
-        current = Version(VERSION)
-        latest = Version(latestVersionStr)
+        current = YQVersion(VERSION)
+        latest = YQVersion(latest_version_str)
         if latest > current:
             print('You are using xc %s. The latest version is %s. Please consider upgrade. ' % (current.version, latest.version))
             print('https://github.com/zlrs/xcode-opener/releases')
 
 
 def shouldCheckVersion():
+    """
+    Check version every several times(default to 10) the program is called.
+    :return:Boolean value, whether should program check version.
+    """
     def initVersionCheck(file_path):
         data = {
             "version_check_count": 1
@@ -78,7 +82,7 @@ def shouldCheckVersion():
 
 def run():
     if shouldCheckVersion():
-        version_check()
+        checkVersion()
 
 
 if __name__ == '__main__':
