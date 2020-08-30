@@ -135,20 +135,27 @@ def removeProjectDerivedData(inputPath, rmAll=False, rmBuild=False, rmIndex=Fals
 # developer note: click option name must be lower case
 @click.command()
 @click.argument('path', default='.')
-@click.option('--rmall', is_flag=True)
-@click.option('--rmbuild', is_flag=True)
-@click.option('--rmindex', is_flag=True)
-def xc(path, rmall, rmbuild, rmindex):
-    """A CLI tool that opens XCode project from Terminal. 
-    Auto detect `.xcodeproj` file or `.xcworkspace` file. 
-    For example, use it to quickly open a workspace after `pod install`. 
+@click.option('--rm-all', is_flag=True,
+              help="Remove the project's derived data in ~/Library/Developer/Xcode/DerivedData.")
+@click.option('--rm-build', is_flag=True,
+              help='Similar to --rm-all, but only remove the `Build` subdirectory.')
+@click.option('--rm-index', is_flag=True,
+              help='Similar to --rm-all, but only remove the `Index` subdirectory.')
+def xc(path, rm_all, rm_build, rm_index):
+    """A CLI tool which aims to provide a convenient operation toolbox on XCode project.
+    It's faster and cleaner than `xed`. You can use it to:
+    (1) open XCode project or workspace. (2) remove project's derived data.
+    (3) [WIP] force kill XCode process. (4) [WIP] generate Objective-C function signatures.
+
+    The argument `path` is a path to the directory containing at least 1 `.xcodeproj` or `.xcworkspace` file, default
+    to the current directory. `.xcworkspace` has higher priority than `.xcodeproj`.
     """
     abs_path = os.path.expanduser(path)
     
     exit_val = 0
     if os.path.exists(abs_path):
-        if rmall or rmbuild or rmindex:
-            removeProjectDerivedData(abs_path, rmAll=rmall, rmBuild=rmbuild, rmIndex=rmindex)
+        if rm_all or rm_build or rm_index:
+            removeProjectDerivedData(abs_path, rmAll=rm_all, rmBuild=rm_build, rmIndex=rm_index)
         else:
             openInXcode(abs_path)
     else:
