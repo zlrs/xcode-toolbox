@@ -4,6 +4,7 @@ import os
 import shutil
 import click
 import version_check
+from logger import printInfo, printExecute, printError
 
 
 def getXCodeProjectOrWorkspaceFilePath(inputPath) -> str:
@@ -25,8 +26,8 @@ def getXCodeProjectOrWorkspaceFilePath(inputPath) -> str:
             index = int(input(prompt))
             return files[index - 1]
         except (ValueError, IndexError) as e:
-            print('Invalid Argument: please enter a valid index. ')
-            print(e)
+            printError('Invalid Argument: please enter a valid index. ')
+            printError(e)
             exit(1)
         return ''
 
@@ -58,10 +59,10 @@ def openInXcode(inputPath):
     file_path = getXCodeProjectOrWorkspaceFilePath(inputPath)
     if file_path:
         cmd = 'open "%s"' % file_path
-        print(cmd)
+        printExecute(cmd)
         os.system(cmd)
     else:
-        print('No .xcodeproj / .xcworkspace file is found. ')
+        printInfo('No .xcodeproj / .xcworkspace file is found. ')
 
 
 def removeProjectDerivedData(inputPath, rmAll=False, rmBuild=False, rmIndex=False):
@@ -70,7 +71,7 @@ def removeProjectDerivedData(inputPath, rmAll=False, rmBuild=False, rmIndex=Fals
     """
     def removeDirIfExist(rmDirPath, ignore_errors=False):
         if os.path.exists(rmDirPath) and os.path.isdir(rmDirPath):
-            print('Removing directory: ' + rmDirPath)
+            printInfo('Removing directory: ' + rmDirPath)
             shutil.rmtree(rmDirPath, ignore_errors=ignore_errors)
             return rmDirPath
         return None
@@ -149,6 +150,8 @@ def xc(path, rm_all, rm_build, rm_index):
 
     The argument `path` is a path to the directory containing at least 1 `.xcodeproj` or `.xcworkspace` file, default
     to the current directory. `.xcworkspace` has higher priority than `.xcodeproj`.
+
+    Contribute: https://github.com/zlrs/xcode-opener
     """
     abs_path = os.path.expanduser(path)
     

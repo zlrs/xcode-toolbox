@@ -1,19 +1,31 @@
 import requests
 import os
 import json
+from logger import printInfo, printExecute, printError
 
-VERSION = '1.2.0'
+VERSION = '1.2.1'
+VERSION_CHECK_TIMES = 7
+
+# ANSI colors
+RED = '\033[0;31m'
+GREEN = '\033[0;32m'
+PURPLE = '\033[0;35m'
+NC = '\033[0m'  # No Color
+
+Error = f"{RED}[Error] "
+Info = f"{GREEN}[Info] "
+Execute = f"{PURPLE}[Execute] "
 
 
-class Version:
+class YQVersion:
     def __init__(self, version: str):
         version.strip()
         version.strip("vV")
         self.version = version
-        self.sematic_versions = version.split('.')
+        self.semantic_versions = version.split('.')
         self.digitVersions = []
-        for sematic_ver in self.sematic_versions:
-            self.digitVersions.append(int(sematic_ver))
+        for semantic_ver in self.semantic_versions:
+            self.digitVersions.append(int(semantic_ver))
     
     def __eq__(self, other):
         return tuple(self.digitVersions) == tuple(other.digitVersions)
@@ -22,11 +34,11 @@ class Version:
         return tuple(self.digitVersions) < tuple(other.digitVersions)
 
 
-def get_latest_version():
+def getLatestVersion():
     URL = 'https://api.github.com/repos/zlrs/xcode-opener/releases?accept=application/vnd.github.v3+json'
     res = requests.get(URL)
     if not res.ok:
-        return '', "error"
+        return '', f"error: status {res.status_code}"  # May be 403: exceeded API rate limit for current IP.
     
     try:
         obj = res.json()
@@ -36,23 +48,32 @@ def get_latest_version():
         return '', "error"
 
 
-def version_check():
-    latestVersionStr, err = get_latest_version()
+def checkVersion():
+    latest_version_str, err = getLatestVersion()
     if not err:
-        current = Version(VERSION)
-        latest = Version(latestVersionStr)
+        current = YQVersion(VERSION)
+        latest = YQVersion(latest_version_str)
         if latest > current:
-            print('You are using xc %s. The latest version is %s. Please consider upgrade. ' % (current.version, latest.version))
-            print('https://github.com/zlrs/xcode-opener/releases')
+            printInfo('You are using xc %s. The latest version is %s. ' % (current.version, latest.version))
+            res = input(Info + 'Would you like to upgrade now? [y/N]' + NC)
+            if res == 'y':
+                install_script = os.path.join(os.path.dirname(__file__), 'install.sh')
+                install_script = os.path.expanduser(install_script)
+                printExecute(install_script)
+                os.execv(install_script, (install_script,))
 
 
 def shouldCheckVersion():
+    """
+    Check version every several times(VERSION_CHECK_TIMES) the program is called.
+    :return:Boolean value, whether should program check version.
+    """
     def initVersionCheck(file_path):
-        data = {
+        init_data = {
             "version_check_count": 1
         }
         with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f)
+            json.dump(init_data, f)
 
     folder = os.path.expanduser('~/.xc')
     if not os.path.exists(folder):
@@ -71,14 +92,14 @@ def shouldCheckVersion():
         except:
             initVersionCheck(file_path)
     
-    if data["version_check_count"] % 10 == 0:
+    if data["version_check_count"] % VERSION_CHECK_TIMES == 0:
         return True
     return False
 
 
 def run():
     if shouldCheckVersion():
-        version_check()
+        checkVersion()
 
 
 if __name__ == '__main__':

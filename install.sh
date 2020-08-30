@@ -18,39 +18,39 @@ if [ ! -d "/usr/local/xc" ]  # 不存在xc文件夹
 then
     # clone repo
     echo "${Execute}git clone https://github.com/zlrs/xcode-opener.git $repo_folder ${NC}"
-    git clone https://github.com/zlrs/xcode-opener.git $repo_folder
-    
+    sudo -S git clone https://github.com/zlrs/xcode-opener.git $repo_folder
+
     # gen symbol link
     echo "${Info}Installing xc command to $command_path ${NC}"
     # 如果路径上已有文件，则删掉
-    if [ -f $command_path ] 
+    if [ -f $command_path ]
     then
         echo "${Execute}rm $command_path ${NC}"
-        rm $command_path
+        sudo -S rm $command_path
     fi
     echo "${Execute}ln -s /usr/local/xc/xc $command_path ${NC}"
-    ln -s /usr/local/xc/xc $command_path
-    
+    sudo -S ln -s /usr/local/xc/xc $command_path
+
     echo "${Info}Installation has been completed. ${NC}"
 else  # 存在 xc 文件夹
     if [ -d "/usr/local/xc/.git" ]  # 且 xc 文件夹是个git repo
     then
         echo "${Info}Already installed xc. Updating... ${NC}"
-        
+
         echo "${Execute}cd /usr/local/xc${NC}"
-        cd /usr/local/xc
-        
+        cd /usr/local/xc || exit 2
+
         echo "${Execute}git pull${NC}"
-        git pull
-        
-        if [ -f $command_path ] 
+        sudo -S git pull
+
+        if [ -f $command_path ]
         then
             echo "${Execute}rm $command_path ${NC}"
-            rm $command_path
+            sudo -S rm $command_path
         fi
-        
+
         echo "${Execute}ln -s /usr/local/xc/xc $command_path ${NC}"
-        ln -s /usr/local/xc/xc $command_path
+        sudo -S ln -s /usr/local/xc/xc $command_path
     else
         echo "${Error}/usr/local/xc/ exists and is not a git repository. ${NC}"
         echo "${Error}No operation is performed. ${NC}"
