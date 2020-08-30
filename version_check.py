@@ -3,7 +3,7 @@ import os
 import json
 from logger import printInfo, printExecute, printError
 
-VERSION = '1.2.1'
+VERSION = '1.2.2'
 VERSION_CHECK_TIMES = 7
 
 # ANSI colors
