@@ -9,7 +9,17 @@ A CLI tool which aims to provide a convenient operation toolbox on XCode project
 The argument `path` is a path to the directory containing at least 1 `.xcodeproj` or `.xcworkspace` file, default 
 to the current directory. `.xcworkspace` has higher priority than `.xcodeproj`.
 
-# Usage 
+## Installation
+```shell
+curl https://raw.githubusercontent.com/zlrs/xcode-opener/master/install.sh | sudo zsh
+```
+
+## Requirements
+* Python 3.6+
+* requests
+* click
+
+## Usage 
 ```
 Usage: xc [OPTIONS] [PATH]
 
@@ -33,31 +43,33 @@ Options:
   --rm-index  Similar to --rm-all, but only remove the `Index` subdirectory.
   --help      Show this message and exit.
 ```
+
 ## Example
-1. specify folder explicitly
-```shell
-git clone git@github.com:SDWebImage/SDWebImage.git ~/GitHub
-xc ~/GitHub/SDWebImage/Examples
+1. open a XCode project or workspace
+    * specify folder explicitly
+    ```shell
+    git clone git@github.com:SDWebImage/SDWebImage.git ~/GitHub
+    xc ~/GitHub/SDWebImage/Examples
+    ```
+    * open project/workspace of current folder without parameters
+    ```shell
+    git clone git@github.com:SDWebImage/SDWebImage.git
+    cd SDWebImage/Examples
+    xc
+    ```
+2. clear project derived folder
 ```
-2. open project/workspace of current folder without parameters
-```shell
-git clone git@github.com:SDWebImage/SDWebImage.git
-cd SDWebImage/Examples
-xc
+# remove project's index from derived data
+xc <Path> --rmindex
+
+# remove project's build from derived data
+xc <Path> --rmbuild
+
+#remove project's all derived data
+xc <Path> --rmall
 ```
 
-# screenshot
-![](./asserts/readme/screenshot-proj+workspace.png)
-![](./asserts/readme/screenshot-muti-projs.png)
-# Prerequisite
-Python 3.6+
-
-# Installation
-```shell
-curl https://raw.githubusercontent.com/zlrs/xcode-opener/master/install.sh | sudo zsh
-```
-
-# Todo features
+## Todo features
 - [ ] toolbox subcommands
     - [ ] `kill` subcommand. To kill all running XCode processes, equivalent to the following shell command. 
     ```shell
@@ -68,10 +80,10 @@ curl https://raw.githubusercontent.com/zlrs/xcode-opener/master/install.sh | sud
 - [x] clear XCode project index folder
 - [x] clear XCode project derivedData folder
 
-# Contribution
+## Contribution
 Comments, pull requests or other kind of contributions are welcome! 
 
 Also if you have any requirements or you encounter any bugs, feel free to open an issue or create a pull request!
 
-# LICENSE
+## LICENSE
 MIT @ zlrs

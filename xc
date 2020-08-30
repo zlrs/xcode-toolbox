@@ -142,7 +142,8 @@ def removeProjectDerivedData(inputPath, rmAll=False, rmBuild=False, rmIndex=Fals
               help='Similar to --rm-all, but only remove the `Build` subdirectory.')
 @click.option('--rm-index', is_flag=True,
               help='Similar to --rm-all, but only remove the `Index` subdirectory.')
-def xc(path, rm_all, rm_build, rm_index):
+@click.option('--version', is_flag=True)
+def xc(path, rm_all, rm_build, rm_index, version):
     """A CLI tool which aims to provide a convenient operation toolbox on XCode project.
     It's faster and cleaner than `xed`. You can use it to:
     (1) open XCode project or workspace. (2) remove project's derived data.
@@ -153,6 +154,10 @@ def xc(path, rm_all, rm_build, rm_index):
 
     Contribute: https://github.com/zlrs/xcode-opener
     """
+    if version:
+        print(version_check.VERSION)
+        exit(0)
+
     abs_path = os.path.expanduser(path)
     
     exit_val = 0
