@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys
 import os
+import shutil
 import click
 import version_check
 
@@ -19,12 +20,13 @@ def getXCodeProjectOrWorkspaceFilePath(dirPath) -> str:
             line = '%d. %s\n' % (cnt, os.path.basename(file))
             prompt += line
             cnt += 1
-        prompt += 'please choose a file to open: '
+        prompt += 'please choose the file to operate: '
         try:
             index = int(input(prompt))
             return files[index - 1]
         except (ValueError, IndexError) as e:
             print('Invalid Argument: please enter a valid index. ')
+            print(e)
             exit(1)
         return ''
 
@@ -62,9 +64,29 @@ def openInXcode(dirPath):
         print('No .xcodeproj / .xcworkspace file is found. ')
 
 
+def removeIndex(dirPath):
+    """Remove the index directory of the project"""
+    derived_data_path = os.path.expanduser('~/Library/Developer/Xcode/DerivedData/')
+
+    proj_file_path = getXCodeProjectOrWorkspaceFilePath(dirPath)
+    proj_name = os.path.splitext(os.path.basename(proj_file_path))[0]
+    if proj_name is None or len(proj_name) < 1:
+        return 1
+
+    proj_dir_list = os.listdir(derived_data_path)
+    for proj_dir in proj_dir_list:
+        if proj_dir.startswith(proj_name):
+            proj_index_dir = os.path.join(derived_data_path, proj_dir, 'Index')
+            print('Removing: ' + proj_index_dir)
+            shutil.rmtree(proj_index_dir)
+
+    return 0
+
+
 @click.command()
 @click.argument('path', default='.')
-def xc(path=''):
+@click.option('--rmindex', is_flag=True)
+def xc(path, rmindex):
     """A CLI tool that opens XCode project from Terminal. 
     Auto detect `.xcodeproj` file or `.xcworkspace` file. 
     For example, use it to quickly open a workspace after `pod install`. 
@@ -72,17 +94,20 @@ def xc(path=''):
     if path == '':
         path = os.getcwd()
     
-    abs_path = os.path.abspath(path)
+    abs_path = os.path.expanduser(path)
     
-    exit_ret = 0
+    exit_val = 0
     if os.path.exists(abs_path):
-        openInXcode(abs_path)
+        if rmindex:
+            removeIndex(abs_path)
+        else:
+            openInXcode(abs_path)
     else:
-        click.echo('path not exist.')
-        exit_ret = 1
+        click.echo('input path not exist.')
+        exit_val = 1
     
     version_check.run()
-    exit(exit_ret)
+    exit(exit_val)
 
 
 if __name__ == '__main__':

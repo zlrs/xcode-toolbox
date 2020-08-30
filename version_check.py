@@ -54,7 +54,7 @@ def shouldCheckVersion():
         with open(file_path, 'w', encoding='utf-8') as f:
             json.dump(data, f)
 
-    folder = os.path.join(os.path.expanduser('~'), '.xc')
+    folder = os.path.expanduser('~/.xc')
     if not os.path.exists(folder):
         os.mkdir(folder)
     
