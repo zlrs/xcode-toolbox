@@ -2,7 +2,17 @@ import requests
 import os
 import json
 
-VERSION = '1.2.0'
+VERSION = '1.2.1'
+
+# ANSI colors
+RED = '\033[0;31m'
+GREEN = '\033[0;32m'
+PURPLE = '\033[0;35m'
+NC = '\033[0m'  # No Color
+
+Error = f"{RED}[Error] "
+Info = f"{GREEN}[Info] "
+Execute = f"{PURPLE}[Execute] "
 
 
 class YQVersion:
@@ -26,7 +36,7 @@ def getLatestVersion():
     URL = 'https://api.github.com/repos/zlrs/xcode-opener/releases?accept=application/vnd.github.v3+json'
     res = requests.get(URL)
     if not res.ok:
-        return '', "error"
+        return '', f"error: status {res.status_code}"  # May be 403: exceeded API rate limit for current IP.
     
     try:
         obj = res.json()
@@ -42,8 +52,12 @@ def checkVersion():
         current = YQVersion(VERSION)
         latest = YQVersion(latest_version_str)
         if latest > current:
-            print('You are using xc %s. The latest version is %s. Please consider upgrade. ' % (current.version, latest.version))
-            print('https://github.com/zlrs/xcode-opener/releases')
+            print(Info + 'You are using xc %s. The latest version is %s. ' % (current.version, latest.version) + NC)
+            res = input(Info + 'Would you like to upgrade now? [y/N]' + NC)
+            if res == 'y':
+                install_script = os.path.join(os.path.dirname(__file__), 'install.sh')
+                print(Execute + install_script + NC)
+                os.execv(install_script, (install_script,))
 
 
 def shouldCheckVersion():
@@ -52,11 +66,11 @@ def shouldCheckVersion():
     :return:Boolean value, whether should program check version.
     """
     def initVersionCheck(file_path):
-        data = {
+        init_data = {
             "version_check_count": 1
         }
         with open(file_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f)
+            json.dump(init_data, f)
 
     folder = os.path.expanduser('~/.xc')
     if not os.path.exists(folder):
@@ -81,7 +95,7 @@ def shouldCheckVersion():
 
 
 def run():
-    if shouldCheckVersion():
+    if shouldCheckVersion() or True:
         checkVersion()
 
 

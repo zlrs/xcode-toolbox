@@ -149,6 +149,8 @@ def xc(path, rm_all, rm_build, rm_index):
 
     The argument `path` is a path to the directory containing at least 1 `.xcodeproj` or `.xcworkspace` file, default
     to the current directory. `.xcworkspace` has higher priority than `.xcodeproj`.
+
+    Contribute: https://github.com/zlrs/xcode-opener
     """
     abs_path = os.path.expanduser(path)
     
