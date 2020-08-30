@@ -1,6 +1,8 @@
 import requests
 import os
 import json
+from logger import printInfo, printExecute, printError
+
 
 VERSION = '1.2.1'
 
@@ -52,11 +54,11 @@ def checkVersion():
         current = YQVersion(VERSION)
         latest = YQVersion(latest_version_str)
         if latest > current:
-            print(Info + 'You are using xc %s. The latest version is %s. ' % (current.version, latest.version) + NC)
+            printInfo('You are using xc %s. The latest version is %s. ' % (current.version, latest.version))
             res = input(Info + 'Would you like to upgrade now? [y/N]' + NC)
             if res == 'y':
                 install_script = os.path.join(os.path.dirname(__file__), 'install.sh')
-                print(Execute + install_script + NC)
+                printExecute(install_script)
                 os.execv(install_script, (install_script,))
 
 
@@ -95,7 +97,7 @@ def shouldCheckVersion():
 
 
 def run():
-    if shouldCheckVersion() or True:
+    if shouldCheckVersion():
         checkVersion()
 
 
