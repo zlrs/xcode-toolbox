@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 import sys
 import os
-import shutil
 import click
 import version_check
 from logger import printInfo, printExecute, printError
+from derived_data_clearner import removeProjectDerivedData
 
 
 def getXCodeProjectOrWorkspaceFilePath(inputPath) -> str:
@@ -65,72 +65,10 @@ def openInXcode(inputPath):
         printInfo('No .xcodeproj / .xcworkspace file is found. ')
 
 
-def removeProjectDerivedData(inputPath, rmAll=False, rmBuild=False, rmIndex=False):
-    """Remove directories from the project's derived data.
-    Specifically the `Index` directory, `Build` directory, or all directories.
-    """
-    def removeDirIfExist(rmDirPath, ignore_errors=False):
-        if os.path.exists(rmDirPath) and os.path.isdir(rmDirPath):
-            printInfo('Removing directory: ' + rmDirPath)
-            shutil.rmtree(rmDirPath, ignore_errors=ignore_errors)
-            return rmDirPath
-        return None
-
-    def handleRemoveSingleProject(singleProjPath, rmAll=False, rmBuild=False, rmIndex=False):
-        proj_index_dir = os.path.join(singleProjPath, 'Index')
-        proj_build_dir = os.path.join(singleProjPath, 'Build')
-        if rmAll:
-            removeDirIfExist(singleProjPath)
-        else:
-            if rmIndex:
-                removeDirIfExist(proj_index_dir)
-            if rmBuild:
-                removeDirIfExist(proj_build_dir)
-
-    def chooseFromPrompt(candidates: list) -> list:
-        index_offset = 1
-        lines = ['Choose the project to operate on:']
-        for i, candidate in enumerate(candidates, start=index_offset):
-            _line = f'{i}. {candidate}'
-            lines.append(_line)
-        lines.append('ALL: all above.\n')
-
-        prompt = '\n'.join(lines)
-        cmd = input(prompt)
-        if cmd.isnumeric():
-            idx = int(cmd) - index_offset
-            if 0 <= idx < len(candidates):
-                return [candidates[idx]]
-        elif cmd == 'ALL':
-            return candidates
-        return []
-
-    derived_data_path = os.path.expanduser('~/Library/Developer/Xcode/DerivedData/')
-
+def removeDerivedData(inputPath, rmAll=False, rmBuild=False, rmIndex=False):
+    """ Handle `--rm-` options """
     proj_file_path = getXCodeProjectOrWorkspaceFilePath(inputPath)
-    proj_name = os.path.splitext(os.path.basename(proj_file_path))[0]
-    if proj_name is None or len(proj_name) < 1:
-        return 1
-
-    # Scan XCode derivedData folder to find out the candidate project(s) that we may need to
-    # do remove operation on.
-    candidates = []
-    for proj_dir in os.listdir(derived_data_path):
-        if proj_dir.startswith(proj_name):
-            candidates.append(os.path.join(derived_data_path, proj_dir))
-
-    # Decide the part of project(s) in `candidates` to we really to do remove operation
-    chosen_ones = []
-    if len(candidates) == 1:
-        chosen_ones = list(candidates[0])
-    elif len(candidates) > 1:
-        chosen_ones = chooseFromPrompt(candidates)
-
-    # Handle the removing all chosen projects
-    for chosen_candidate in chosen_ones:
-        handleRemoveSingleProject(chosen_candidate, rmAll=rmAll, rmBuild=rmBuild, rmIndex=rmIndex)
-
-    return 0
+    removeProjectDerivedData(proj_file_path, rmAll=rmAll, rmBuild=rmBuild, rmIndex=rmIndex)
 
 
 # developer note: click option name must be lower case
@@ -158,14 +96,14 @@ def xc(path, rm_all, rm_build, rm_index, version):
         print(version_check.VERSION)
         exit(0)
 
-    abs_path = os.path.expanduser(path)
+    abs_input_path = os.path.expanduser(path)
     
     exit_val = 0
-    if os.path.exists(abs_path):
+    if os.path.exists(abs_input_path):
         if rm_all or rm_build or rm_index:
-            removeProjectDerivedData(abs_path, rmAll=rm_all, rmBuild=rm_build, rmIndex=rm_index)
+            removeDerivedData(abs_input_path, rmAll=rm_all, rmBuild=rm_build, rmIndex=rm_index)
         else:
-            openInXcode(abs_path)
+            openInXcode(abs_input_path)
     else:
         click.echo('input path not exist.')
         exit_val = 1

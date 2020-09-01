@@ -3,7 +3,7 @@ import os
 import json
 from logger import printInfo, printExecute, printError
 
-VERSION = '1.2.2'
+VERSION = '1.2.3'
 VERSION_CHECK_TIMES = 7
 
 # ANSI colors
@@ -35,8 +35,8 @@ class YQVersion:
 
 
 def getLatestVersion():
-    URL = 'https://api.github.com/repos/zlrs/xcode-opener/releases?accept=application/vnd.github.v3+json'
-    res = requests.get(URL)
+    releases_API_URL = 'https://api.github.com/repos/zlrs/xcode-opener/releases?accept=application/vnd.github.v3+json'
+    res = requests.get(releases_API_URL)
     if not res.ok:
         return '', f"error: status {res.status_code}"  # May be 403: exceeded API rate limit for current IP.
     
