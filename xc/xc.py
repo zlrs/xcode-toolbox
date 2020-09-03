@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import os
 import click
 from xc import version_check
@@ -67,7 +66,10 @@ def openInXcode(inputPath):
 def removeDerivedData(inputPath, rmAll=False, rmBuild=False, rmIndex=False):
     """ Handle `--rm-` options """
     proj_file_path = getXCodeProjectOrWorkspaceFilePath(inputPath)
-    removeProjectDerivedData(proj_file_path, rmAll=rmAll, rmBuild=rmBuild, rmIndex=rmIndex)
+    if proj_file_path:
+        removeProjectDerivedData(proj_file_path, rmAll=rmAll, rmBuild=rmBuild, rmIndex=rmIndex)
+    else:
+        printInfo('No .xcodeproj / .xcworkspace file is found. ')
 
 
 # developer note: click option name must be lower case

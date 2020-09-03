@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 repo_folder="/usr/local/xc"  # git clone 到这个文件夹
-xc_command_script_path="$repo_folder/xc/xc"  # xc 脚本的路径
+xc_command_script_path="$repo_folder/xc/xc"  # xc.py 脚本的路径
 install_command_path="/usr/local/bin/xc"  # xc 脚本的安装路径
 
 # ANSI colors
