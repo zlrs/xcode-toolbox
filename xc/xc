@@ -1,10 +1,9 @@
 #!/usr/bin/python3
-import sys
 import os
 import click
-import version_check
-from logger import printInfo, printExecute, printError
-from derived_data_clearner import removeProjectDerivedData
+from xc_ import version_check
+from xc_.logger import printInfo, printExecute, printError
+from xc_.derived_data_clearner import removeProjectDerivedData
 
 
 def getXCodeProjectOrWorkspaceFilePath(inputPath) -> str:
