@@ -2,8 +2,8 @@ import requests
 import os
 import json
 from xc.logger import printInfo, printExecute
+from . import __version__
 
-VERSION = '1.2.3'
 VERSION_CHECK_TIMES = 7
 
 # ANSI colors
@@ -51,7 +51,7 @@ def getLatestVersion():
 def checkVersion():
     latest_version_str, err = getLatestVersion()
     if not err:
-        current = YQVersion(VERSION)
+        current = YQVersion(__version__)
         latest = YQVersion(latest_version_str)
         if latest > current:
             printInfo('You are using xc %s. The latest version is %s. ' % (current.version, latest.version))

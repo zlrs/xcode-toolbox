@@ -3,6 +3,7 @@ import click
 from xc import version_check
 from xc.logger import printInfo, printExecute, printError
 from xc.derived_data_clearner import removeProjectDerivedData
+from . import __version__
 
 
 def getXCodeProjectOrWorkspaceFilePath(inputPath) -> str:
@@ -94,7 +95,7 @@ def xc(path, rm_all, rm_build, rm_index, version):
     Contribute: https://github.com/zlrs/xcode-opener
     """
     if version:
-        print(version_check.VERSION)
+        print(__version__)
         exit(0)
 
     abs_input_path = os.path.expanduser(path)
