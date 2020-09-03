@@ -1,6 +1,6 @@
 import os
 import shutil
-from xc_.logger import printInfo, printError
+from xc.logger import printInfo, printError
 import plistlib
 from typing import List, Tuple
 

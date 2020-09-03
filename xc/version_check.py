@@ -1,7 +1,7 @@
 import requests
 import os
 import json
-from xc_.logger import printInfo, printExecute
+from xc.logger import printInfo, printExecute
 
 VERSION = '1.2.3'
 VERSION_CHECK_TIMES = 7
