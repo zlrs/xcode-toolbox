@@ -19,7 +19,8 @@ curl https://raw.githubusercontent.com/zlrs/xcode-opener/master/install.sh | sud
 * requests
 * click
 
-## Usage 
+## Usage
+
 ```
 Usage: xc [OPTIONS] [PATH]
 

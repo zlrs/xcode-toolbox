@@ -85,7 +85,7 @@ def removeDerivedData(inputPath, rmAll=False, rmBuild=False, rmIndex=False):
 @click.option('--version', is_flag=True)
 def xc(path, rm_all, rm_build, rm_index, version):
     """A CLI tool which aims to provide a convenient operation toolbox on XCode project.
-    It's faster and cleaner than `xed`. You can use it to:
+    You can use it to:
     (1) open XCode project or workspace. (2) remove project's derived data.
     (3) [WIP] force kill XCode process. (4) [WIP] generate Objective-C function signatures.
 
@@ -94,6 +94,10 @@ def xc(path, rm_all, rm_build, rm_index, version):
 
     Contribute: https://github.com/zlrs/xcode-opener
     """
+    DEBUG = 1
+    if DEBUG:
+        print(f"rm_all: {rm_all}, rm_build: {rm_build}, rm_index: {rm_index}, version: {version}")
+
     if version:
         print(__version__)
         exit(0)
