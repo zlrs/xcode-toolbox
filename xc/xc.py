@@ -3,6 +3,7 @@ import click
 from xc import version_check
 from xc.logger import printInfo, printExecute, printError
 from xc.derived_data_clearner import removeProjectDerivedData
+from xc.utils import isRunInPycharm
 from . import __version__
 
 
@@ -94,8 +95,7 @@ def xc(path, rm_all, rm_build, rm_index, version):
 
     Contribute: https://github.com/zlrs/xcode-opener
     """
-    DEBUG = 1
-    if DEBUG:
+    if isRunInPycharm():
         print(f"rm_all: {rm_all}, rm_build: {rm_build}, rm_index: {rm_index}, version: {version}")
 
     if version:

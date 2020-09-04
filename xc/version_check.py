@@ -98,8 +98,10 @@ def shouldCheckVersion():
 
 
 def run():
-    if shouldCheckVersion():
-        checkVersion()
+    pass
+    # 由于切换到PyPI发布，之前的version_check逻辑需要调整。暂时先下掉这个模块。
+    # if shouldCheckVersion():
+    #     checkVersion()
 
 
 if __name__ == '__main__':
