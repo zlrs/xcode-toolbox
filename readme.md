@@ -11,7 +11,7 @@ to the current directory. `.xcworkspace` has higher priority than `.xcodeproj`.
 
 ## Installation
 ```shell
-curl https://raw.githubusercontent.com/zlrs/xcode-opener/master/install.sh | sudo zsh
+pip3 install xcode-toolbox
 ```
 
 ## Requirements
@@ -19,7 +19,8 @@ curl https://raw.githubusercontent.com/zlrs/xcode-opener/master/install.sh | sud
 * requests
 * click
 
-## Usage 
+## Usage
+
 ```
 Usage: xc [OPTIONS] [PATH]
 
@@ -60,13 +61,13 @@ Options:
 2. clear project derived folder
 ```
 # remove project's index from derived data
-xc <Path> --rmindex
+xc <Path> --rm-index
 
 # remove project's build from derived data
-xc <Path> --rmbuild
+xc <Path> --rm-build
 
 #remove project's all derived data
-xc <Path> --rmall
+xc <Path> --rm-all
 ```
 
 ## Todo features

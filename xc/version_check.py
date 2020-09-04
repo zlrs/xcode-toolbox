@@ -1,9 +1,9 @@
 import requests
 import os
 import json
-from logger import printInfo, printExecute, printError
+from xc.logger import printInfo, printExecute
+from . import __version__
 
-VERSION = '1.2.3'
 VERSION_CHECK_TIMES = 7
 
 # ANSI colors
@@ -51,13 +51,13 @@ def getLatestVersion():
 def checkVersion():
     latest_version_str, err = getLatestVersion()
     if not err:
-        current = YQVersion(VERSION)
+        current = YQVersion(__version__)
         latest = YQVersion(latest_version_str)
         if latest > current:
             printInfo('You are using xc %s. The latest version is %s. ' % (current.version, latest.version))
             res = input(Info + 'Would you like to upgrade now? [y/N]' + NC)
             if res == 'y':
-                install_script = os.path.join(os.path.dirname(__file__), 'install.sh')
+                install_script = os.path.join(os.path.dirname(__file__), '../install.sh')
                 install_script = os.path.expanduser(install_script)
                 printExecute(install_script)
                 os.execv(install_script, (install_script,))

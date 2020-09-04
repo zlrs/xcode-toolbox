@@ -1,9 +1,8 @@
-import sys
 import os
 import shutil
-from logger import printInfo, printExecute, printError
+from xc.logger import printInfo, printError
 import plistlib
-from typing import List, Set, Dict, Tuple, Optional
+from typing import List, Tuple
 
 
 def parsePlist(plist_file_path) -> dict:
