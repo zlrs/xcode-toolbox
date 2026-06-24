@@ -1,2 +1,2 @@
-click >= 7.1.2
+click >= 8.4.2
 requests >= 2.24.0
